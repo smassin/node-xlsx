@@ -23,10 +23,11 @@ export const parse = <T = any[]>(mixed: unknown, options: Sheet2JSONOpts & Parsi
   const workBook = isString(mixed)
     ? readFile(mixed, { dateNF, raw, ...otherOptions })
     : read(mixed, { dateNF, raw, ...otherOptions });
-  return Object.keys(workBook.Sheets).map((name) => {
+  return workBook.SheetNames.map((name, index) => {
     const sheet = workBook.Sheets[name]!;
     return {
       name,
+      hidden: workBook.Workbook?.Sheets[index]?.Hidden,
       data: utils.sheet_to_json<T>(sheet, {
         dateNF,
         header,
